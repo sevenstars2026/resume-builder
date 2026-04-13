@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>简历生成器 v2</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <strong>Resume Builder</strong>
+          <span>v2.5 Glass</span>
+        </div>
+        <button id="themeToggleBtn" type="button" class="ghost">切换深色模式</button>
+      </div>
+    </header>
+
+    <header class="page-header">
+      <h1>简历生成器 v2</h1>
+      <p>输入信息，实时预览，点击导出 PDF</p>
+    </header>
+
+    <main class="layout">
+      <section class="editor-card">
+        <div class="toolbar">
+          <button id="loadDemoBtn" type="button" class="ghost">加载示例</button>
+          <button id="clearBtn" type="button" class="ghost">清空内容</button>
+          <button id="printBtn" type="button" class="primary">导出 PDF</button>
+        </div>
+
+        <form id="resumeForm">
+          <fieldset>
+            <legend>基本信息</legend>
+            <label>
+              姓名
+              <input name="name" placeholder="张三" required />
+            </label>
+            <label>
+              求职意向
+              <input name="title" placeholder="前端开发实习生" />
+            </label>
+            <label>
+              电话
+              <input name="phone" placeholder="13800000000" />
+            </label>
+            <label>
+              邮箱
+              <input name="email" placeholder="you@example.com" />
+            </label>
+            <label>
+              城市
+              <input name="city" placeholder="上海" />
+            </label>
+            <label>
+              GitHub / 作品集链接
+              <input name="link" placeholder="https://github.com/yourname" />
+            </label>
+            <label>
+              个人照片（证件照）
+              <input id="photoInput" type="file" accept="image/*" />
+            </label>
+            <label>
+              个人简介
+              <textarea
+                name="summary"
+                rows="3"
+                placeholder="一句话说明你的优势和方向"
+              ></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>教育经历</legend>
+            <label>
+              学校 + 专业 + 时间（每行一条）
+              <textarea
+                name="education"
+                rows="4"
+                placeholder="XX大学 软件工程 本科 2022.09 - 2026.06"
+              ></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>项目经历</legend>
+            <label>
+              项目经历（每行一条）
+              <textarea
+                name="projects"
+                rows="6"
+                placeholder="简历生成器 | 个人项目 | 2026.04&#10;- 负责表单与实时预览模块开发&#10;- 实现打印导出 PDF"
+              ></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>技能清单</legend>
+            <label>
+              技能（每行一条）
+              <textarea
+                name="skills"
+                rows="5"
+                placeholder="JavaScript&#10;React&#10;Node.js&#10;Git"
+              ></textarea>
+            </label>
+          </fieldset>
+        </form>
+      </section>
+
+      <section class="preview-card">
+        <div class="preview-meta">
+          <div class="page-mode-control">
+            <button id="singlePageBtn" type="button" class="ghost active">单页</button>
+            <button id="doublePageBtn" type="button" class="ghost" disabled>双页</button>
+          </div>
+          <span id="fitStatus">A4 适配：100%</span>
+        </div>
+        <article id="resumePreview" class="resume">
+          <header class="resume-header">
+            <div class="resume-head-main">
+              <h2 data-field="name">你的姓名</h2>
+              <p class="title" data-field="title">你的求职意向</p>
+              <p class="meta" data-field="contact">电话 | 邮箱 | 城市 | 链接</p>
+            </div>
+            <img id="previewPhoto" class="resume-photo hidden" alt="个人照片" />
+          </header>
+
+          <section>
+            <h3>个人简介</h3>
+            <p data-field="summary">这里会显示你的个人简介。</p>
+          </section>
+
+          <section>
+            <h3>教育经历</h3>
+            <ul data-list="education">
+              <li>这里会显示你的教育经历。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>项目经历</h3>
+            <ul data-list="projects">
+              <li>这里会显示你的项目经历。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>技能清单</h3>
+            <ul data-list="skills">
+              <li>这里会显示你的技能清单。</li>
+            </ul>
+          </section>
+        </article>
+      </section>
+    </main>
+
+    <dialog id="cropDialog" class="crop-dialog">
+      <div class="crop-panel">
+        <h3>调整照片位置</h3>
+        <p>拖拽照片调整位置，使用滑块缩放，应用后会放在简历右上角。</p>
+        <canvas id="cropCanvas" width="300" height="400"></canvas>
+        <label>
+          缩放
+          <input id="cropZoom" type="range" min="1" max="3" step="0.01" value="1" />
+        </label>
+        <div class="crop-actions">
+          <button id="cancelCropBtn" type="button">取消</button>
+          <button id="applyCropBtn" type="button" class="primary">应用裁剪</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
