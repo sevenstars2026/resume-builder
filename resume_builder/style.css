@@ -316,7 +316,7 @@ body[data-template="classic"] .resume {
 }
 
 body[data-template="classic"] .resume-header {
-  border-bottom: 2px solid #333;
+  border-bottom: 2px solid #333 !important;
   margin-bottom: 12px;
   padding-bottom: 12px;
 }
@@ -359,9 +359,10 @@ body[data-template="modern"] .resume {
 }
 
 body[data-template="modern"] .resume-header {
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid #3759ff !important;
   padding-left: 12px;
   margin-bottom: 14px;
+  border-bottom: none !important;
 }
 
 body[data-theme="dark"][data-template="modern"] .resume-header {
@@ -372,7 +373,7 @@ body[data-template="modern"] .resume h2 {
   font-size: 16px;
   margin: 0;
   font-weight: bold;
-  color: var(--primary);
+  color: #3759ff;
 }
 
 body[data-theme="dark"][data-template="modern"] .resume h2 {
@@ -384,7 +385,7 @@ body[data-template="modern"] .resume h3 {
   margin-top: 10px;
   margin-bottom: 6px;
   font-weight: bold;
-  color: var(--primary);
+  color: #3759ff;
 }
 
 body[data-theme="dark"][data-template="modern"] .resume h3 {
@@ -403,17 +404,18 @@ body[data-template="modern"] .resume ul {
 body[data-template="minimal"] .resume {
   font-size: 10px;
   line-height: 1.5;
-  background: #fafafa;
+  background: #fafafa !important;
   padding: 32px;
 }
 
 body[data-theme="dark"][data-template="minimal"] .resume {
-  background: #0f1419;
+  background: #0f1419 !important;
 }
 
 body[data-template="minimal"] .resume-header {
   margin-bottom: 16px;
   padding-bottom: 8px;
+  border: none !important;
 }
 
 body[data-template="minimal"] .resume h2 {
@@ -453,8 +455,10 @@ body[data-template="elegant"] .resume {
 body[data-template="elegant"] .resume-header {
   text-align: center;
   margin-bottom: 16px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd !important;
+  border-left: none !important;
   padding-bottom: 12px;
+  padding-left: 0;
 }
 
 body[data-theme="dark"][data-template="elegant"] .resume-header {
