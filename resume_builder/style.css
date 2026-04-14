@@ -208,6 +208,67 @@ body[data-theme="dark"] .topbar {
   border-color: var(--primary);
 }
 
+.preset-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preset-selector label {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.preset-btn {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid rgba(148, 166, 210, 0.35);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  background: rgba(55, 89, 255, 0.05);
+  border-color: var(--primary);
+}
+
+.preset-btn.active {
+  background: rgba(55, 89, 255, 0.15);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.section-toggles {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: rgba(55, 89, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 166, 210, 0.2);
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  margin: 0;
+}
+
+.toggle-label input {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
 button.primary,
 button.ghost {
   padding: 6px 12px;
