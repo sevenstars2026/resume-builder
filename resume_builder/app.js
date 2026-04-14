@@ -1,6 +1,7 @@
 const STORAGE_KEY = "resume-builder-v2";
 const THEME_KEY = "resume-builder-theme";
 const PHOTO_KEY = "resume-builder-photo";
+const TEMPLATE_KEY = "resume-builder-template";
 
 const resumeForm = document.querySelector("#resumeForm");
 const printBtn = document.querySelector("#printBtn");
@@ -19,6 +20,19 @@ const cropCanvas = document.querySelector("#cropCanvas");
 const cropZoom = document.querySelector("#cropZoom");
 const applyCropBtn = document.querySelector("#applyCropBtn");
 const cancelCropBtn = document.querySelector("#cancelCropBtn");
+
+// Export/Import buttons
+const exportJsonBtn = document.querySelector("#exportJsonBtn");
+const exportMdBtn = document.querySelector("#exportMdBtn");
+const exportTxtBtn = document.querySelector("#exportTxtBtn");
+const importJsonBtn = document.querySelector("#importJsonBtn");
+const fileInput = document.querySelector("#fileInput");
+
+// Template buttons
+const templateClassicBtn = document.querySelector("#templateClassicBtn");
+const templateModernBtn = document.querySelector("#templateModernBtn");
+const templateMinimalBtn = document.querySelector("#templateMinimalBtn");
+const templateElegantBtn = document.querySelector("#templateElegantBtn");
 
 const textTargets = {
   name: document.querySelector('[data-field="name"]'),
@@ -236,6 +250,137 @@ const demoData = {
   skills: "JavaScript\nReact\nNode.js\nGit\nHTML/CSS"
 };
 
+// Export functions
+function exportJSON() {
+  const data = readFormData();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "resume.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportMarkdown() {
+  const data = readFormData();
+  let md = `# ${data.name}\n\n`;
+  md += `**${data.title}**\n\n`;
+  md += buildContactText(data) + "\n\n";
+  
+  if (data.summary) {
+    md += `## 个人简介\n${data.summary}\n\n`;
+  }
+  
+  if (data.education) {
+    md += `## 教育经历\n`;
+    parseMultiLine(data.education).forEach(item => {
+      md += `- ${item}\n`;
+    });
+    md += "\n";
+  }
+  
+  if (data.projects) {
+    md += `## 项目经历\n`;
+    parseMultiLine(data.projects).forEach(item => {
+      md += `- ${item}\n`;
+    });
+    md += "\n";
+  }
+  
+  if (data.skills) {
+    md += `## 技能清单\n`;
+    parseMultiLine(data.skills).forEach(item => {
+      md += `- ${item}\n`;
+    });
+  }
+  
+  const blob = new Blob([md], { type: "text/markdown" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "resume.md";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportTXT() {
+  const data = readFormData();
+  let txt = `${data.name}\n`;
+  txt += `${data.title}\n`;
+  txt += buildContactText(data) + "\n\n";
+  
+  if (data.summary) {
+    txt += `个人简介\n${data.summary}\n\n`;
+  }
+  
+  if (data.education) {
+    txt += `教育经历\n`;
+    parseMultiLine(data.education).forEach(item => {
+      txt += `${item}\n`;
+    });
+    txt += "\n";
+  }
+  
+  if (data.projects) {
+    txt += `项目经历\n`;
+    parseMultiLine(data.projects).forEach(item => {
+      txt += `${item}\n`;
+    });
+    txt += "\n";
+  }
+  
+  if (data.skills) {
+    txt += `技能清单\n`;
+    parseMultiLine(data.skills).forEach(item => {
+      txt += `${item}\n`;
+    });
+  }
+  
+  const blob = new Blob([txt], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "resume.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON() {
+  fileInput.click();
+}
+
+function handleFileImport(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      writeFormData(data);
+      sync();
+      alert("导入成功！");
+    } catch (error) {
+      alert("导入失败，文件格式不正确。");
+    }
+  };
+  reader.readAsText(file);
+  fileInput.value = "";
+}
+
+// Template functions
+function setTemplate(template) {
+  document.body.dataset.template = template;
+  localStorage.setItem(TEMPLATE_KEY, template);
+  
+  const buttons = document.querySelectorAll(".template-btn");
+  buttons.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.template === template);
+  });
+}
+
 resumeForm.addEventListener("input", sync);
 
 printBtn.addEventListener("click", () => {
@@ -258,6 +403,18 @@ loadDemoBtn.addEventListener("click", () => {
   sync();
 });
 
+exportJsonBtn?.addEventListener("click", exportJSON);
+exportMdBtn?.addEventListener("click", exportMarkdown);
+exportTxtBtn?.addEventListener("click", exportTXT);
+importJsonBtn?.addEventListener("click", importJSON);
+fileInput?.addEventListener("change", handleFileImport);
+
+// Template button listeners
+templateClassicBtn?.addEventListener("click", () => setTemplate("classic"));
+templateModernBtn?.addEventListener("click", () => setTemplate("modern"));
+templateMinimalBtn?.addEventListener("click", () => setTemplate("minimal"));
+templateElegantBtn?.addEventListener("click", () => setTemplate("elegant"));
+
 const initial = loadData();
 if (initial) {
   writeFormData(initial);
@@ -277,6 +434,9 @@ function applyTheme(theme) {
 
 const savedTheme = localStorage.getItem(THEME_KEY) || "light";
 applyTheme(savedTheme);
+
+const savedTemplate = localStorage.getItem(TEMPLATE_KEY) || "classic";
+setTemplate(savedTemplate);
 
 const savedPhoto = localStorage.getItem(PHOTO_KEY);
 if (savedPhoto) {

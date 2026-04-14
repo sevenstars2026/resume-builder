@@ -31,6 +31,24 @@
           <button id="printBtn" type="button" class="primary">导出 PDF</button>
         </div>
 
+        <div class="toolbar">
+          <div class="template-selector">
+            <label>模板：</label>
+            <button id="templateClassicBtn" type="button" class="template-btn active" data-template="classic">经典</button>
+            <button id="templateModernBtn" type="button" class="template-btn" data-template="modern">现代</button>
+            <button id="templateMinimalBtn" type="button" class="template-btn" data-template="minimal">极简</button>
+            <button id="templateElegantBtn" type="button" class="template-btn" data-template="elegant">优雅</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button id="exportJsonBtn" type="button" class="ghost">导出 JSON</button>
+          <button id="exportMdBtn" type="button" class="ghost">导出 Markdown</button>
+          <button id="exportTxtBtn" type="button" class="ghost">导出 TXT</button>
+          <button id="importJsonBtn" type="button" class="ghost">导入 JSON</button>
+          <input id="fileInput" type="file" accept=".json" style="display: none;" />
+        </div>
+
         <form id="resumeForm">
           <fieldset>
             <legend>基本信息</legend>
