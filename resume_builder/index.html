@@ -32,42 +32,13 @@
         </div>
 
         <div class="toolbar">
-          <div class="template-selector">
+          <div class="style-selector">
             <label>模板风格：</label>
             <button id="templateClassicBtn" type="button" class="template-btn active" data-template="classic">经典</button>
             <button id="templateModernBtn" type="button" class="template-btn" data-template="modern">现代</button>
             <button id="templateMinimalBtn" type="button" class="template-btn" data-template="minimal">极简</button>
             <button id="templateElegantBtn" type="button" class="template-btn" data-template="elegant">优雅</button>
           </div>
-        </div>
-
-        <div class="toolbar">
-          <div class="preset-selector">
-            <label>预设模板：</label>
-            <button id="presetAllBtn" type="button" class="preset-btn active" data-preset="all">全部</button>
-            <button id="presetTechBtn" type="button" class="preset-btn" data-preset="tech">技术岗</button>
-            <button id="presetNonTechBtn" type="button" class="preset-btn" data-preset="nontech">非技术岗</button>
-            <button id="presetCustomBtn" type="button" class="preset-btn" data-preset="custom">自定义</button>
-          </div>
-        </div>
-
-        <div id="sectionToggles" class="section-toggles" style="display: none;">
-          <label class="toggle-label">
-            <input type="checkbox" name="section-link" checked />
-            显示链接部分
-          </label>
-          <label class="toggle-label">
-            <input type="checkbox" name="section-education" checked />
-            显示教育经历
-          </label>
-          <label class="toggle-label">
-            <input type="checkbox" name="section-projects" checked />
-            显示项目经历
-          </label>
-          <label class="toggle-label">
-            <input type="checkbox" name="section-skills" checked />
-            显示技能清单
-          </label>
         </div>
 
         <div class="toolbar">
@@ -101,7 +72,7 @@
               城市
               <input name="city" placeholder="上海" />
             </label>
-            <label id="linkLabel">
+            <label>
               GitHub / 作品集链接
               <input name="link" placeholder="https://github.com/yourname" />
             </label>
@@ -119,7 +90,7 @@
             </label>
           </fieldset>
 
-          <fieldset id="educationSection">
+          <fieldset>
             <legend>教育经历</legend>
             <label>
               学校 + 专业 + 时间（每行一条）
@@ -131,7 +102,7 @@
             </label>
           </fieldset>
 
-          <fieldset id="projectsSection">
+          <fieldset>
             <legend>项目经历</legend>
             <label>
               项目经历（每行一条）
@@ -143,7 +114,7 @@
             </label>
           </fieldset>
 
-          <fieldset id="skillsSection">
+          <fieldset>
             <legend>技能清单</legend>
             <label>
               技能（每行一条）
@@ -180,21 +151,21 @@
             <p data-field="summary">这里会显示你的个人简介。</p>
           </section>
 
-          <section id="educationPreview">
+          <section>
             <h3>教育经历</h3>
             <ul data-list="education">
               <li>这里会显示你的教育经历。</li>
             </ul>
           </section>
 
-          <section id="projectsPreview">
+          <section>
             <h3>项目经历</h3>
             <ul data-list="projects">
               <li>这里会显示你的项目经历。</li>
             </ul>
           </section>
 
-          <section id="skillsPreview">
+          <section>
             <h3>技能清单</h3>
             <ul data-list="skills">
               <li>这里会显示你的技能清单。</li>

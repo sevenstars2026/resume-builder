@@ -2,8 +2,6 @@ const STORAGE_KEY = "resume-builder-v2";
 const THEME_KEY = "resume-builder-theme";
 const PHOTO_KEY = "resume-builder-photo";
 const TEMPLATE_KEY = "resume-builder-template";
-const PRESET_KEY = "resume-builder-preset";
-const SECTIONS_KEY = "resume-builder-sections";
 
 const resumeForm = document.querySelector("#resumeForm");
 const printBtn = document.querySelector("#printBtn");
@@ -36,16 +34,6 @@ const templateModernBtn = document.querySelector("#templateModernBtn");
 const templateMinimalBtn = document.querySelector("#templateMinimalBtn");
 const templateElegantBtn = document.querySelector("#templateElegantBtn");
 
-// Preset buttons
-const presetAllBtn = document.querySelector("#presetAllBtn");
-const presetTechBtn = document.querySelector("#presetTechBtn");
-const presetNonTechBtn = document.querySelector("#presetNonTechBtn");
-const presetCustomBtn = document.querySelector("#presetCustomBtn");
-
-// Section toggles
-const sectionToggles = document.querySelector("#sectionToggles");
-const toggleCheckboxes = document.querySelectorAll(".toggle-label input");
-
 const textTargets = {
   name: document.querySelector('[data-field="name"]'),
   title: document.querySelector('[data-field="title"]'),
@@ -58,16 +46,6 @@ const listTargets = {
   skills: document.querySelector('[data-list="skills"]')
 };
 
-// Preset configurations
-const presets = {
-  all: { link: true, education: true, projects: true, skills: true },
-  tech: { link: true, education: true, projects: true, skills: true },
-  nontech: { link: false, education: true, projects: true, skills: true }
-};
-
-let currentSections = { link: true, education: true, projects: true, skills: true };
-let currentPreset = "all";
-
 function parseMultiLine(input = "") {
   return input
     .split("\n")
@@ -76,7 +54,7 @@ function parseMultiLine(input = "") {
 }
 
 function buildContactText(data) {
-  const parts = [data.phone, data.email, data.city, (currentSections.link && data.link) ? data.link : null].filter(Boolean);
+  const parts = [data.phone, data.email, data.city, data.link].filter(Boolean);
   return parts.length ? parts.join(" | ") : "电话 | 邮箱 | 城市 | 链接";
 }
 
@@ -104,17 +82,6 @@ function writeFormData(data) {
   });
 }
 
-function updateSectionVisibility() {
-  document.querySelector("#linkLabel").style.display = currentSections.link ? "flex" : "none";
-  document.querySelector("#educationSection").style.display = currentSections.education ? "block" : "none";
-  document.querySelector("#projectsSection").style.display = currentSections.projects ? "block" : "none";
-  document.querySelector("#skillsSection").style.display = currentSections.skills ? "block" : "none";
-  
-  document.querySelector("#educationPreview").style.display = currentSections.education ? "section" : "none";
-  document.querySelector("#projectsPreview").style.display = currentSections.projects ? "section" : "none";
-  document.querySelector("#skillsPreview").style.display = currentSections.skills ? "section" : "none";
-}
-
 function renderPreview(data) {
   setText(textTargets.name, data.name, "你的姓名");
   setText(textTargets.title, data.title, "你的求职意向");
@@ -123,23 +90,17 @@ function renderPreview(data) {
   const contactEl = document.querySelector('[data-field="contact"]');
   contactEl.textContent = buildContactText(data);
 
-  if (currentSections.education) {
-    setList(
-      listTargets.education,
-      parseMultiLine(data.education),
-      "这里会显示你的教育经历。"
-    );
-  }
-  if (currentSections.projects) {
-    setList(
-      listTargets.projects,
-      parseMultiLine(data.projects),
-      "这里会显示你的项目经历。"
-    );
-  }
-  if (currentSections.skills) {
-    setList(listTargets.skills, parseMultiLine(data.skills), "这里会显示你的技能清单。");
-  }
+  setList(
+    listTargets.education,
+    parseMultiLine(data.education),
+    "这里会显示你的教育经历。"
+  );
+  setList(
+    listTargets.projects,
+    parseMultiLine(data.projects),
+    "这里会显示你的项目经历。"
+  );
+  setList(listTargets.skills, parseMultiLine(data.skills), "这里会显示你的技能清单。");
 }
 
 function saveData(data) {
@@ -154,27 +115,6 @@ function loadData() {
   } catch {
     return null;
   }
-}
-
-function saveSections() {
-  localStorage.setItem(SECTIONS_KEY, JSON.stringify(currentSections));
-}
-
-function loadSections() {
-  const raw = localStorage.getItem(SECTIONS_KEY);
-  if (!raw) return;
-  try {
-    currentSections = JSON.parse(raw);
-    updateToggleCheckboxes();
-    updateSectionVisibility();
-  } catch {}
-}
-
-function updateToggleCheckboxes() {
-  toggleCheckboxes.forEach(cb => {
-    const sectionName = cb.name.replace("section-", "");
-    cb.checked = currentSections[sectionName];
-  });
 }
 
 function sync() {
@@ -333,7 +273,7 @@ function exportMarkdown() {
     md += `## 个人简介\n${data.summary}\n\n`;
   }
   
-  if (currentSections.education && data.education) {
+  if (data.education) {
     md += `## 教育经历\n`;
     parseMultiLine(data.education).forEach(item => {
       md += `- ${item}\n`;
@@ -341,7 +281,7 @@ function exportMarkdown() {
     md += "\n";
   }
   
-  if (currentSections.projects && data.projects) {
+  if (data.projects) {
     md += `## 项目经历\n`;
     parseMultiLine(data.projects).forEach(item => {
       md += `- ${item}\n`;
@@ -349,7 +289,7 @@ function exportMarkdown() {
     md += "\n";
   }
   
-  if (currentSections.skills && data.skills) {
+  if (data.skills) {
     md += `## 技能清单\n`;
     parseMultiLine(data.skills).forEach(item => {
       md += `- ${item}\n`;
@@ -375,7 +315,7 @@ function exportTXT() {
     txt += `个人简介\n${data.summary}\n\n`;
   }
   
-  if (currentSections.education && data.education) {
+  if (data.education) {
     txt += `教育经历\n`;
     parseMultiLine(data.education).forEach(item => {
       txt += `${item}\n`;
@@ -383,7 +323,7 @@ function exportTXT() {
     txt += "\n";
   }
   
-  if (currentSections.projects && data.projects) {
+  if (data.projects) {
     txt += `项目经历\n`;
     parseMultiLine(data.projects).forEach(item => {
       txt += `${item}\n`;
@@ -391,7 +331,7 @@ function exportTXT() {
     txt += "\n";
   }
   
-  if (currentSections.skills && data.skills) {
+  if (data.skills) {
     txt += `技能清单\n`;
     parseMultiLine(data.skills).forEach(item => {
       txt += `${item}\n`;
@@ -428,30 +368,6 @@ function handleFileImport(event) {
   };
   reader.readAsText(file);
   fileInput.value = "";
-}
-
-// Preset functions
-function setPreset(preset) {
-  currentPreset = preset;
-  localStorage.setItem(PRESET_KEY, preset);
-  
-  const buttons = document.querySelectorAll(".preset-btn");
-  buttons.forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.preset === preset);
-  });
-  
-  if (preset === "custom") {
-    sectionToggles.style.display = "flex";
-  } else {
-    sectionToggles.style.display = "none";
-    if (presets[preset]) {
-      currentSections = { ...presets[preset] };
-      saveSections();
-      updateToggleCheckboxes();
-      updateSectionVisibility();
-      sync();
-    }
-  }
 }
 
 // Template functions
@@ -507,25 +423,7 @@ templateModernBtn?.addEventListener("click", () => setTemplate("modern"));
 templateMinimalBtn?.addEventListener("click", () => setTemplate("minimal"));
 templateElegantBtn?.addEventListener("click", () => setTemplate("elegant"));
 
-// Preset button listeners
-presetAllBtn?.addEventListener("click", () => setPreset("all"));
-presetTechBtn?.addEventListener("click", () => setPreset("tech"));
-presetNonTechBtn?.addEventListener("click", () => setPreset("nontech"));
-presetCustomBtn?.addEventListener("click", () => setPreset("custom"));
-
-// Section toggle listeners
-toggleCheckboxes.forEach(cb => {
-  cb.addEventListener("change", () => {
-    const sectionName = cb.name.replace("section-", "");
-    currentSections[sectionName] = cb.checked;
-    saveSections();
-    updateSectionVisibility();
-    sync();
-  });
-});
-
 const initial = loadData();
-loadSections();
 if (initial) {
   writeFormData(initial);
   renderPreview(initial);
@@ -547,9 +445,6 @@ applyTheme(savedTheme);
 
 const savedTemplate = localStorage.getItem(TEMPLATE_KEY) || "classic";
 setTemplate(savedTemplate);
-
-const savedPreset = localStorage.getItem(PRESET_KEY) || "all";
-setPreset(savedPreset);
 
 const savedPhoto = localStorage.getItem(PHOTO_KEY);
 if (savedPhoto) {
